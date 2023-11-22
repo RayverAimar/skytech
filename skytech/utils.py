@@ -61,10 +61,11 @@ class Flight:
     def get_dict(self):
         flight_dict = {}
         fees_dict = {}
+        print(self.fees)
         if self.fees:
             for fee in self.fees:
                 fees_dict[fee.name] = fee.price
-        flight_dict['price'] = fees_dict
+        flight_dict['price'] = fees_dict['basic']
         flight_dict['currency'] = self.currency
         flight_dict['duration'] = self.duration
         if self.departure_datetime:
@@ -80,7 +81,7 @@ class Flight:
         else:
             flight_dict['arrival_date'] = None
             flight_dict['arrival_time'] = None
-        flight_dict['scales'] = self.scale
+        flight_dict['scales'] = False if self.scale == 'Directo' else True
         details_list = []
         for detail in self.details:
             if detail:

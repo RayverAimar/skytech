@@ -67,6 +67,7 @@ class LatamScraper:
         with open(title, "w") as outfile:
             json.dump(self.__get_data(), outfile)
             print(f'Data collected of Flights from {self.departure_date} saved successfully in \'{title}\'')
+        return self.__get_data()
 
     def __get_element(self, driver, xpath, get_text=False):
         try:
@@ -138,29 +139,14 @@ class LatamScraper:
 
                     # Get the prices per each fee
                     fees_button = self.__get_element(flight, f'.//div[contains(@class, "{CLASS_FEES_BUTTON}")]')
-                    fees = []
-                    if fees_button and price:
-                        fees_button.click()
-                        WebDriverWait(driver, timeout=TIMEOUT_PER_BUTTON).until(EC.presence_of_element_located((By.XPATH, f'.//button[contains(@class, "{CLASS_CLOSE_FEES_BUTTON}")]')))
-                        fees_box = self.__get_elements(flight, f'.//li[contains(@class, "{CLASS_FEES_BOX}")]')
-                        for i, fee in enumerate(fees_box):
-                            fee_name = self.__get_element(fee, f'.//span[contains(@class, "{CLASS_TOP_FEE_NAME}")]', get_text=True)
-                            if not fee_name: # There wasn't found top fee, other fees have the same layout
-                                fee_name = self.__get_element(fee, f'.//span[contains(@class, "{CLASS_BASIC_FEE_NAME}")]', get_text=True)
-                            if fee_name != 'Basic':
-                                fee_price = self.__get_element(fee, f'.//div[contains(@class, "{CLASS_TOP_FEE_PRICE}")]/div/span/span[2]', get_text=True)
-                                fee_price = float(fee_price) if fee_price else None
-                            else:
-                                fee_price = self.__get_element(fee, f'.//span[contains(@class, "{CLASS_BASIC_FEE_PRICE}")][2]', get_text=True)
-                                fee_price = float(fee_price) if fee_price else None
-                            fee_price = fee_price + price if fee_price != price else fee_price
-                            fees.append(Fee(name=fee_name,
-                                            price=fee_price,
-                                        )
-                            )
-                        close_fees_box_button = flight.find_element(By.XPATH, f'.//button[contains(@class, "{CLASS_CLOSE_FEES_BUTTON}")]')
-                        close_fees_box_button.click()
+                    fees_button.click()
+                    WebDriverWait(driver, timeout=TIMEOUT_PER_BUTTON).until(EC.presence_of_element_located((By.XPATH, f'.//button[contains(@class, "{CLASS_CLOSE_FEES_BUTTON}")]')))
 
+                    fees = []
+                    fees.append(Fee(name='basic',
+                        price=price,
+                    ))
+                    
                     # Get the number of scales 
                     scale = self.__get_element(flight, f'.//a[contains(@class, "{CLASS_SCALE}")]/span', get_text=True)
                     if scale:
@@ -243,10 +229,10 @@ class LatamScraper:
                             airplane_name,
         )
 
-myScraper = LatamScraper(origin='Arequipa',
-                         destination='Piura',
-                         departure_date=date(2024, 2, 3),
-                         return_date=date(2024, 2, 5),
-)
-myScraper.scrape()
-myScraper.save()
+#myScraper = LatamScraper(origin='Arequipa',
+#                         destination='Lima',
+#                         departure_date=date(2024, 2, 3),
+#                         return_date=date(2024, 2, 5),
+#)
+#myScraper.scrape()
+#myScraper.save()

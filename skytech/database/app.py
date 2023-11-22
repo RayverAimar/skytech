@@ -91,7 +91,7 @@ class Flight(Resource):
     def post(self, flight_id):
         args = flight_put_args.parse_args()
         flight = FlightModel(
-            id=flight_id,
+            #id=flight_id,
             price=args['price'],
             duration=args['duration'],
             departure_date=args['departure_date'],
@@ -139,5 +139,5 @@ class Flight(Resource):
 api.add_resource(Flight, "/flight/<int:flight_id>")
 
 if __name__ == "__main__":
-    #db.create_all()
+    db.create_all()
     app.run(debug=True)
