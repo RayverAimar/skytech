@@ -1,8 +1,11 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from datetime import date
+
+import sqlite3
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -204,6 +207,35 @@ def login():
         return index(user.id)
     else:
         return render_template('login.html')
+    
+
+@app.route("/", methods=["GET", "POST"])
+def main():
+    if request.method == "POST":
+        query = request.form["search"]
+        
+        if query != "":
+            return redirect(url_for("search_results", query=query))
+    
+    
+    return render_template("index.html")
+
+@app.route("/search_results/<query>")
+def search_results(query):
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    
+    cursor.execute("SELECT * FROM flight_model")
+    
+    flights = cursor.fetchall()
+    
+    keys = ["id", "price", "duration", "departure_date", "departure_time", "arrival_date", "arrival_time", "scales"]
+    documents = [dict(zip(keys, flight)) for flight in flights]
+
+    connection.close()
+
+    return render_template("search_results.html", query=query, documents=documents)
+
 if __name__ == "__main__":
     db.create_all()
     app.run(debug=True)
