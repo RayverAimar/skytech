@@ -1,13 +1,14 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from datetime import date
 
 app = Flask(__name__)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 
 
 class FlightModel(db.Model):
@@ -22,6 +23,23 @@ class FlightModel(db.Model):
 
     def __repr__(self):
         return f"Flight(id={self.id}, price={self.price}, duration={self.duration}, departure_date={self.departure_date}, departure_time={self.departure_time}, arrival_date={self.arrival_date}, arrival_time={self.arrival_time}, scales={self.scales})"
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    phone = db.Column(db.String(50), nullable=False)
+
+class SearchFlights(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    origin = db.Column(db.String(50), nullable=False)
+    destination = db.Column(db.String(50), nullable=False)
+    departure_date = db.Column(db.Date, nullable=False)
+    return_date = db.Column(db.Date, nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 flight_put_args = reqparse.RequestParser()
 flight_put_args.add_argument("price", type=float, help="Price of the flight", required=True)
@@ -137,7 +155,55 @@ class Flight(Resource):
         #return '', 204
 
 api.add_resource(Flight, "/flight/<int:flight_id>")
-
+@app.route('/user/<int:id>', methods=['GET'])
+def index(id):
+    # find in database user
+    # if user exists, return render_template('index.html')
+    # if user does not exist, return render_template('login.html')
+    data = User.query.filter_by(id=id).first()
+    if data:
+        busquedas = SearchFlights.query.filter_by(usuario_id=id).all()
+        dataDic = {
+            'id': data.id,
+            'username': data.username,
+            'password': data.password,
+            'email': data.email,
+            'firstname': data.first_name,
+            'lastname': data.last_name,
+            'phone': data.phone
+        }
+        busquedasDic = []
+        if len(busquedas) > 0:
+            for busqueda in busquedas:
+                busquedasDic.append({
+                    'id': busqueda.id,
+                    'origin': busqueda.origin,
+                    'destination': busqueda.destination,
+                    'departure_date': busqueda.departure_date,
+                    'return_date': busqueda.return_date
+                })
+            return render_template('infoUser.html', data=dataDic, skies=busquedasDic)
+        else:
+            return render_template('infoUser.html', data=dataDic)
+    else:
+        return render_template('login.html')
+    
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        last_name = request.form['surname']
+        email = request.form['email']
+        phone = request.form['phone']
+        user = User(username=username, password=password, email=email, first_name=name, last_name=last_name, phone=phone)
+        db.session.add(user)
+        db.session.commit()
+        # execute route /user/id
+        return index(user.id)
+    else:
+        return render_template('login.html')
 if __name__ == "__main__":
     db.create_all()
     app.run(debug=True)
