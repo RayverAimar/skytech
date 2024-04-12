@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - SkyTech Browser</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("../static/img/backLogin.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Regístrate</h1>
+        <p>Ingresa tus datos</p>
+        <form action="/signup" method="post">
+            <input type="text" name="name" placeholder="Nombre">
+            <input type="text" name="surname" placeholder="Apellido">
+            <input type="text" name="email" placeholder="Correo electrónico">
+            <input type="text" name="username" placeholder="Nombre de usuario">
+            <input type="text" name="phone" placeholder="Teléfono">
+            <input type="password" name="password" placeholder="Contraseña">
+            <button type="submit">Crear cuenta</button>
+        </form>
+        <div class="success-message" id="success-message">
+            <p>¡Usuario creado con éxito!</p>
+        </div>
+    </div>
+</body>
+</html>
