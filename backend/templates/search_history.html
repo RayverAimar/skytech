@@ -1,79 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search History</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #555;
-            margin-bottom: 10px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        strong {
-            font-weight: bold;
-        }
-        .btn-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Search History</h1>
-        <p>Welcome, {{ user.username }}!</p>
-        <h2>Your Search History:</h2>
-        <ul>
-            {% for search in searches %}
-                <li>
-                    <strong>Origin:</strong> {{ search.origin }} -
-                    <strong>Destination:</strong> {{ search.destination }} -
-                    <strong>Departure Date:</strong> {{ search.departure_date }} -
-                    <strong>Arrival Date:</strong> {{ search.return_date }}
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="btn-container">
-            <a href="{{ url_for('index') }}" class="btn">Back to Main Menu</a>
-        </div>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gradient-to-r from-primary to-purple-600 min-h-screen flex items-center justify-center"
+  >
+    <div class="container mx-auto px-4 py-5 bg-white shadow rounded-lg">
+      <h1 class="text-center text-2xl font-bold mb-5">Search History</h1>
+      <p>Welcome, {{ user.username }}!</p>
+      <table class="table-auto w-full mt-3">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-left">Origin</th>
+            <th class="px-4 py-2 text-left">Destination</th>
+            <th class="px-4 py-2 text-left">Departure Date</th>
+            <th class="px-4 py-2 text-left">Arrival Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for search in searches %}
+          <tr>
+            <td class="border px-4 py-2">{{ search.origin }}</td>
+            <td class="border px-4 py-2">{{ search.destination }}</td>
+            <td class="border px-4 py-2">{{ search.departure_date }}</td>
+            <td class="border px-4 py-2">{{ search.return_date }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="text-center mt-5">
+        <a
+          href="{{ url_for('index') }}"
+          class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Back to Main Menu
+        </a>
+      </div>
     </div>
-</body>
+  </body>
 </html>
