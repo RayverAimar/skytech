@@ -1,6 +1,7 @@
 from databases.connection import db
 
 class Flight(db.Model):
+    __tablename__ = 'flight_model'
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Float, nullable=False)
     duration = db.Column(db.String(50), nullable=False)
