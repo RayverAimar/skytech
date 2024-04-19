@@ -1,43 +1,17 @@
 from flask import Flask, request, render_template, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
 import random
+import os
 from datetime import datetime, timedelta
 
+from databases import db
+from models import Flight, User, SearchHistory
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases/database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'secret_key'
-db = SQLAlchemy(app)
+app.secret_key = os.urandom(24)
 
-class FlightModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Float, nullable=False)
-    duration = db.Column(db.String(50), nullable=False)
-    departure_date = db.Column(db.String(20), nullable=False)
-    departure_time = db.Column(db.String(20), nullable=False)
-    arrival_date = db.Column(db.String(20), nullable=False)
-    arrival_time = db.Column(db.String(20), nullable=False)
-    scales = db.Column(db.Boolean, nullable=False)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    phone = db.Column(db.String(50), nullable=False)
-    searches = relationship('SearchHistory', backref='user')
-
-class SearchHistory(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    origin = db.Column(db.String(50), nullable=False)
-    destination = db.Column(db.String(50), nullable=False)
-    departure_date = db.Column(db.String(50), nullable=False)
-    return_date = db.Column(db.String(50), nullable=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
+db.init_app(app)
 #db.create_all()
 
 @app.route("/", methods=["GET", "POST"])
