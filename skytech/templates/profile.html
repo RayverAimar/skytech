@@ -3,47 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <title>User Profile</title>
-</head>
-<body>
-    <h1>User Profile</h1>
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Phone:</strong> {{ user.phone }}</p>
-    <form action="{{ url_for('search_users') }}" method="post">
-        <input type="text" name="search_query" placeholder="Search users by username">
-        <button type="submit">Search</button>
-    </form>
+    <style>
+        /* Custom Styles */
+        .container {
+            padding: 20px;
+        }
 
-    <!-- Solicitudes de amistad recibidas -->
-    <h2>Friend Requests Received</h2>
-    {% if friend_requests_received %}
-        <ul>
-            {% for request in friend_requests_received %}
-                <li>
-                    {{ request.sender.username }} sent you a friend request
-                    <form action="{{ url_for('accept_friend_request', request_id=request.id) }}" method="post">
-                        <input type="submit" value="Accept">
-                    </form>
-                    <form action="{{ url_for('reject_friend_request', request_id=request.id) }}" method="post">
-                        <input type="submit" value="Reject">
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No friend requests</p>
-    {% endif %}
-    <h2>Friend List</h2>
-    {% if friends %}
-        <ul>
-            {% for friend in friends %}
-                <li>{{ friend.username }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No friends</p>
-    {% endif %}
+        .profile-info, .friend-request, .friend-list {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], button, input[type="submit"] {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-green-400 to-blue-500">
+    <div class="container mx-auto max-w-lg bg-white rounded-lg overflow-hidden shadow-lg">
+        <div class="profile-info p-4 bg-gray-100 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold mb-2">User Profile</h1>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone }}</p>
+            </div>
+            <div>
+                <img src="../static/img/image.png" alt="Profile Picture" class="h-20 w-20 object-cover rounded-full">
+            </div>
+        </div>
+        
+        <form action="{{ url_for('search_users') }}" method="post" class="p-4 bg-gray-100 rounded-lg shadow-md">
+            <input type="text" name="search_query" placeholder="Search users by username" class="py-2 px-4 border border-gray-300 rounded-md mr-2">
+            <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600">Search</button>
+        </form>
+
+        <!-- Solicitudes de amistad recibidas -->
+        <div class="friend-request p-4 bg-gray-100 rounded-lg shadow-md">
+            <h2 class="text-lg font-bold mb-2">Friend Requests Received</h2>
+            {% if friend_requests_received %}
+                <ul>
+                    {% for request in friend_requests_received %}
+                        <li class="mb-2">
+                            {{ request.sender.username }} sent you a friend request
+                            <form action="{{ url_for('accept_friend_request', request_id=request.id) }}" method="post">
+                                <input type="submit" value="Accept" class="py-1 px-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                            </form>
+                            <form action="{{ url_for('reject_friend_request', request_id=request.id) }}" method="post">
+                                <input type="submit" value="Reject" class="py-1 px-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No friend requests</p>
+            {% endif %}
+        </div>
+        <div class="friend-list p-4 bg-gray-100 rounded-lg shadow-md">
+            <h2 class="text-lg font-bold mb-2">Friend List</h2>
+            {% if friends %}
+                <ul>
+                    {% for friend in friends %}
+                        <li>{{ friend.username }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No friends</p>
+            {% endif %}
+        </div> 
+    </div>
 </body>
 </html>
