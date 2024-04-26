@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro - SkyTech Browser</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes moveGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      body {
+        background: linear-gradient(270deg, #6ee7b7, #3b82f6, #9333ea);
+        background-size: 600% 600%;
+        animation: moveGradient 10s ease infinite;
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="container bg-white p-8 rounded-lg shadow-lg max-w-md">
+      <h1 class="text-center text-3xl font-bold mb-6">Regístrate</h1>
+      <p class="text-center mb-6">Ingresa tus datos</p>
+      <form action="/signup" method="post">
+        <div class="form-control mb-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Nombre"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <div class="form-control mb-4">
+          <input
+            type="text"
+            name="surname"
+            placeholder="Apellido"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <div class="form-control mb-4">
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo electrónico"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <div class="form-control mb-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Nombre de usuario"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <div class="form-control mb-4">
+          <input
+            type="text"
+            name="phone"
+            placeholder="Teléfono"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <div class="form-control mb-6">
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            class="input input-bordered w-full"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-full">
+          Crear cuenta
+        </button>
+      </form>
+      <div class="text-center">
+        <p>
+          Already have an account?
+          <a href="{{ url_for('login') }}" class="link">Login</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
