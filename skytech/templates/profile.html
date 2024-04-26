@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Phone:</strong> {{ user.phone }}</p>
+    <form action="{{ url_for('search_users') }}" method="post">
+        <input type="text" name="search_query" placeholder="Search users by username">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Solicitudes de amistad recibidas -->
+    <h2>Friend Requests Received</h2>
+    {% if friend_requests_received %}
+        <ul>
+            {% for request in friend_requests_received %}
+                <li>
+                    {{ request.sender.username }} sent you a friend request
+                    <form action="{{ url_for('accept_friend_request', request_id=request.id) }}" method="post">
+                        <input type="submit" value="Accept">
+                    </form>
+                    <form action="{{ url_for('reject_friend_request', request_id=request.id) }}" method="post">
+                        <input type="submit" value="Reject">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No friend requests</p>
+    {% endif %}
+    <h2>Friend List</h2>
+    {% if friends %}
+        <ul>
+            {% for friend in friends %}
+                <li>{{ friend.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No friends</p>
+    {% endif %}
+</body>
+</html>
