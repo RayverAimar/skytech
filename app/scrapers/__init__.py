@@ -1,0 +1,1 @@
+from .latam.scraper import LatamScraper

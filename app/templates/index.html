@@ -64,10 +64,12 @@
           >
             <li><a href="{{ url_for('index') }}">Home</a></li>
             {% if user %}
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            <li><a href="{{ url_for('user.profile', user_id=user.id) }}">Profile</a></li>
+            <li><a href="{{ url_for('user.search_history') }}">Search History</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
             {% else %}
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('signup') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            <li><a href="{{ url_for('auth.signup') }}">Register</a></li>
             {% endif %}
           </ul>
         </div>
@@ -167,7 +169,7 @@
             Find Your Flight <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-green-400">Easily</span>
           </h1>
           <br><br>
-          <form action="{{ url_for('index') }}" method="post" class="flex justify-center">
+          <form action="{{ url_for('search_flights.search') }}" method="post" class="flex justify-center">
             <div class="form-control">
               <div class="relative">
                 <label class="input input-bordered flex items-center input-lg w-full max-w-xs">
