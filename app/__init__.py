@@ -14,13 +14,15 @@ def create_app():
     app.secret_key = os.urandom(24)
     
     db.init_app(app)
+    #with app.app_context():
+    #    db.create_all()
 
     @app.route("/", methods=['GET'])
-    def index():
+    def home():
         if 'user_id' in session:
             user = User.query.filter_by(id=session['user_id']).first()
-            return render_template("index.html", user=user, random=random)
-        return render_template("index.html", user=None, random=random)
+            return render_template("home.html", user=user, random=random)
+        return render_template("home.html", user=None, random=random)
 
     app.register_blueprint(auth)
     app.register_blueprint(user)

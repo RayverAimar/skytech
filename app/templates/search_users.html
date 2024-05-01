@@ -1,28 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search Results</title>
-  </head>
-  <body>
-    <h1>Search Results</h1>
-    {% if users %}
-    <ul>
-      {% for user in users %}
-      <li>
-        {{ user.username }}
-        <form
-          action="{{ url_for('user.send_friend_request', receiver_id=user.id) }}"
-          method="post"
-        >
-          <button type="submit">Send Friend Request</button>
-        </form>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>No users found</p>
-    {% endif %}
-  </body>
-</html>
+{% extends 'app.html' %} {% block title %} 🛩️ SkyTech | Profile {% endblock %}
+{% block content %}
+
+<div class="container mx-auto mt-8">
+  <h1 class="text-2xl font-bold mb-3">Search Results</h1>
+
+  {% if users %}{% for user in users %}
+  <div class="flex justify-between items-center p-4 bg-base-100 rounded-box">
+    <span>{{ user.username }}</span>
+    <form
+      action="{{ url_for('user.send_friend_request', receiver_id=user.id) }}"
+      method="post"
+      class="inline"
+    >
+      <button class="btn">Send Friend Request</button>
+    </form>
+  </div>
+  {% endfor %} {% else %}
+  <span>No users found</span>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -24,7 +24,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         session['user_id'] = user.id
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     else:
         return render_template('signup.html')
     
@@ -36,11 +36,11 @@ def login():
         user = User.query.filter_by(username=username, password=password).first()
         if user:
             session['user_id'] = user.id
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     else:
         return render_template('login.html')
 
 @auth.route('/logout')
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))

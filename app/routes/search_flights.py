@@ -20,8 +20,8 @@ def search():
     
     query = request.form['search']
     
-    if query == ' ':
-        return redirect(url_for('main'))
+    if query == '':
+        return redirect(url_for('home'))
     
     ### Parsed Query ### 
     date_matches = re.findall(r'(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(\d{1,2})', query, re.IGNORECASE)
@@ -59,7 +59,7 @@ def search():
             db.session.add(new_search)
             db.session.commit()
         
-        return redirect(url_for('search_results',
+        return redirect(url_for('search_flights.search_results',
                         origin=origin,
                         destination=destination,
                         departure_date=departure_date,

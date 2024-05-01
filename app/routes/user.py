@@ -15,9 +15,9 @@ def search_history():
         if user:
             searches = SearchHistory.query.filter_by(usuario_id=user_id).all()
             return render_template('search_history.html', user=user, searches=searches, random=random)
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     
 @user.route('/profile/search_users', methods=['GET', 'POST'])
 def search_users():
@@ -26,7 +26,7 @@ def search_users():
         if search_query:
             users = User.query.filter(User.username.ilike(f'%{search_query}%')).all()
             return render_template('search_users.html', users=users)
-    return redirect(url_for('profile'))
+    return redirect(url_for('home'))
     
 @user.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def profile(user_id):
@@ -48,7 +48,7 @@ def profile(user_id):
                     new_request = FriendRequest(sender_id=sender_id, receiver_id=receiver.id)
                     db.session.add(new_request)
                     db.session.commit()
-        return render_template('profile.html', user=user, friend_requests_received=friend_requests_received, friends=friends)
+        return render_template('profile.html', user=user, friend_requests_received=friend_requests_received, friends=friends, random=random)
     else:
         return redirect(url_for('auth.login'))
     
@@ -59,7 +59,7 @@ def send_friend_request(receiver_id):
         friend_request = FriendRequest(sender_id=sender_id, receiver_id=receiver_id)
         db.session.add(friend_request)
         db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @user.route('/accept_friend_request/<int:request_id>', methods=['POST'])
 def accept_friend_request(request_id):
@@ -69,7 +69,7 @@ def accept_friend_request(request_id):
         if friend_request and friend_request.receiver_id == user_id:
             friend_request.status = 'accepted'
             db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @user.route('/reject_friend_request/<int:request_id>', methods=['POST'])
 def reject_friend_request(request_id):
@@ -79,4 +79,4 @@ def reject_friend_request(request_id):
         if friend_request and friend_request.receiver_id == user_id:
             friend_request.status = 'rejected'
             db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))

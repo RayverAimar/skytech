@@ -1,106 +1,80 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Search Results - Skytech</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-  <body
-    class="bg-cover"
-    style="background-image: url('{{ url_for('static', filename='img/aircraft.png') }}');"
-  >
-    <div class="container mx-auto px-4 py-5 mt-5 bg-white rounded-lg shadow">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
-        Flight Results
-      </h2>
-      <p class="text-lg text-center text-gray-600 mb-6">
-        Explore your flight options below.
-      </p>
+{% extends 'app.html' %} {% block title %} 🛩️ SkyTech | Scraper {% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-5 mt-5 bg-white rounded-lg shadow">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
+    Flight Results
+  </h2>
+  <p class="text-lg text-center text-gray-600 mb-6">
+    Explore your flight options below.
+  </p>
 
-      <div class="space-y-4">
-        {% for flight in documents %}
-        <div
-          class="bg-white rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 p-4"
-        >
-          <div class="grid grid-cols-3 gap-4">
-            <div>
-              <h5 class="font-semibold">
-                {{ flight['departure_date'] }} - {{ flight['arrival_date'] }}
-              </h5>
-              <p class="text-sm text-gray-500">
-                {{ flight['departure_time'] }} - {{ flight['arrival_time'] }}
-              </p>
-            </div>
-            <div>
-              <p>Origin - Destination</p>
-              <p>Duration: {{ flight['duration'] }}</p>
-            </div>
-            <div class="text-right">
-              <h3 class="text-xl font-bold">USD {{ flight['price'] }}</h3>
-              <div class="flex justify-end space-x-2">
-                <a href="#" class="btn btn-primary">Book Now</a>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-modal-toggle="flightModal-{{ loop.index }}"
-                >
-                  ChatGPT Description
-                </button>
-              </div>
-            </div>
+  <div class="space-y-4">
+    {% for flight in documents %}
+    <div
+      class="bg-white rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 p-4"
+    >
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <h5 class="font-semibold">
+            {{ flight['departure_date'] }} - {{ flight['arrival_date'] }}
+          </h5>
+          <p class="text-sm text-gray-500">
+            {{ flight['departure_time'] }} - {{ flight['arrival_time'] }}
+          </p>
+        </div>
+        <div>
+          <p>Origin - Destination</p>
+          <p>Duration: {{ flight['duration'] }}</p>
+        </div>
+        <div class="text-right">
+          <h3 class="text-xl font-bold">USD {{ flight['price'] }}</h3>
+          <div class="flex justify-end space-x-2">
+            <a href="#" class="btn btn-primary">Book Now</a>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-modal-toggle="flightModal-{{ loop.index }}"
+            >
+              ChatGPT Description
+            </button>
           </div>
         </div>
-        <!-- Modal -->
-        <div
-          id="flightModal-{{ loop.index }}"
-          tabindex="-1"
-          aria-hidden="true"
-          class="modal modal-fade-in"
-        >
-          <div class="modal-box">
-            <h3 class="font-bold text-lg">About your destination</h3>
-            <p class="py-4">
-              Embárquese en una aventura inolvidable desde {{
-              flight['departure_date'] }} hacia la vibrante y dinámica {{
-              flight['arrival_date'] }}. Disfrute de un viaje confortable y sin
-              escalas que lo llevará a su destino en solo {{ flight['duration']
-              }}. Aproveche nuestras tarifas económicas desde USD {{
-              flight['price'] }} y experimente el servicio de clase mundial de
-              nuestra aerolínea. ¡Reserve ahora y asegure su asiento para
-              descubrir los tesoros que el destino tiene para ofrecer!
-            </p>
-            <div class="modal-action">
-              <a
-                href="#"
-                class="btn btn-secondary"
-                data-modal-toggle="flightModal-{{ loop.index }}"
-                >Close</a
-              >
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-
-      <div class="text-center mt-10">
-        <a href="{{ url_for('index') }}" class="btn btn-secondary"
-          >Back to Search</a
-        >
       </div>
     </div>
-  </body>
-</html>
+    <!-- Modal -->
+    <div
+      id="flightModal-{{ loop.index }}"
+      tabindex="-1"
+      aria-hidden="true"
+      class="modal modal-fade-in"
+    >
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">About your destination</h3>
+        <p class="py-4">
+          Embárquese en una aventura inolvidable desde {{
+          flight['departure_date'] }} hacia la vibrante y dinámica {{
+          flight['arrival_date'] }}. Disfrute de un viaje confortable y sin
+          escalas que lo llevará a su destino en solo {{ flight['duration'] }}.
+          Aproveche nuestras tarifas económicas desde USD {{ flight['price'] }}
+          y experimente el servicio de clase mundial de nuestra aerolínea.
+          ¡Reserve ahora y asegure su asiento para descubrir los tesoros que el
+          destino tiene para ofrecer!
+        </p>
+        <div class="modal-action">
+          <a
+            href="#"
+            class="btn btn-secondary"
+            data-modal-toggle="flightModal-{{ loop.index }}"
+            >Close</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Search</a>
+  </div>
+</div>
+{% endblock %}

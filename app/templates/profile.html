@@ -1,51 +1,84 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile</title>
-  </head>
-  <body>
-    <h1>User Profile</h1>
+{% extends 'app.html' %} {% block title %} 🛩️ SkyTech | Profile {% endblock %}
+{% block content %}
+
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">User Profile</h1>
+  <div class="bg-white shadow-md rounded-lg p-6 mb-4">
     <p><strong>Username:</strong> {{ user.username }}</p>
     <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Phone:</strong> {{ user.phone }}</p>
-    <form action="{{ url_for('user.search_users') }}" method="post">
+  </div>
+
+  <!-- Formulario de búsqueda de usuarios -->
+  <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Search Users</h2>
+    <form
+      action="{{ url_for('user.search_users') }}"
+      method="post"
+      class="flex gap-2 items-center"
+    >
       <input
         type="text"
         name="search_query"
         placeholder="Search users by username"
+        class="input input-bordered w-full max-w-xs"
       />
-      <button type="submit">Search</button>
+      <button type="submit" class="btn btn-primary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 10.5a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0zm0 0l4.5 4.5"
+          />
+        </svg>
+        Search
+      </button>
     </form>
+  </div>
 
-    <!-- Solicitudes de amistad recibidas -->
-    <h2>Friend Requests Received</h2>
+  <!-- Solicitudes de amistad recibidas -->
+  <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+    <h2 class="text-xl font-semibold mb-3">Friend Requests Received</h2>
     {% if friend_requests_received %}
     <ul>
       {% for request in friend_requests_received %}
-      <li>
+      <li class="flex justify-between items-center mb-2">
         {{ request.sender.username }} sent you a friend request
-        <form
-          action="{{ url_for('user.accept_friend_request', request_id=request.id) }}"
-          method="post"
-        >
-          <input type="submit" value="Accept" />
-        </form>
-        <form
-          action="{{ url_for('user.reject_friend_request', request_id=request.id) }}"
-          method="post"
-        >
-          <input type="submit" value="Reject" />
-        </form>
+        <div>
+          <form
+            action="{{ url_for('user.accept_friend_request', request_id=request.id) }}"
+            method="post"
+            class="inline"
+          >
+            <input type="submit" value="Accept" class="btn btn-success" />
+          </form>
+          <form
+            action="{{ url_for('user.reject_friend_request', request_id=request.id) }}"
+            method="post"
+            class="inline"
+          >
+            <input type="submit" value="Reject" class="btn btn-error" />
+          </form>
+        </div>
       </li>
       {% endfor %}
     </ul>
     {% else %}
     <p>No friend requests</p>
     {% endif %}
-    <h2>Friend List</h2>
+  </div>
+
+  <!-- Lista de amigos -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-3">Friend List</h2>
     {% if friends %}
     <ul>
       {% for friend in friends %}
@@ -55,5 +88,7 @@
     {% else %}
     <p>No friends</p>
     {% endif %}
-  </body>
-</html>
+  </div>
+</div>
+
+{% endblock %}
