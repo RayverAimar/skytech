@@ -114,7 +114,7 @@ class LatamScraper:
                     box_info = self.__get_element(flight, f'.//div[contains(@class, "{CLASS_BOX_INFO}")]')
                     
                     # Get the duration of total flight 
-                    duration_str = self.__get_element(flight, './/div[2]/span[2]', get_text=True)
+                    duration_str = self.__get_element(flight, '/html/body/div[1]/div[1]/main/div/div/div/div/ol/li[1]/div/div/div[1]/div[2]/div[1]/div[3]/span[2]', get_text=True)
                     if duration_str:
                         duration_hours = get_hours_from_str(duration_str)
                         duration_minutes = get_minutes_from_str(duration_str) if len(duration_str) > 4 else 0
@@ -228,11 +228,3 @@ class LatamScraper:
                             flight_code,
                             airplane_name,
         )
-
-#myScraper = LatamScraper(origin='Arequipa',
-#                         destination='Lima',
-#                         departure_date=date(2024, 2, 3),
-#                         return_date=date(2024, 2, 5),
-#)
-#myScraper.scrape()
-#myScraper.save()
