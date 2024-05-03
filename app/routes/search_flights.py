@@ -80,16 +80,24 @@ def search_results():
 
     query = Flight.query
 
+    dict_of_acronyms = {
+    'Arequipa':'AQP',
+    'Cuzco':'CUZ',
+    'Lima':'LIM',
+    'Piura':'PIU',
+    'Tumbes':'TBP'
+    }
+
     if origin:
-        query = query.filter(Flight.origin == origin)
+        query = query.filter(Flight.origin == dict_of_acronyms[origin])
     
     if destination:
-        query = query.filter(Flight.destination == destination)
+        query = query.filter(Flight.destination == dict_of_acronyms[destination])
 
     if departure_date:
         query = query.filter(Flight.departure_date == departure_date)
 
-    flights = query.all()
+    flights = query.order_by(Flight.departure_date).all()
 
     if not flights:
         # Scraper
@@ -100,6 +108,36 @@ def search_results():
         )
 
         scraper.scrape()
+        flights_data = scraper.save()
+
+        for flight_info in flights_data:
+            flight = Flight(
+                origin=flight_info['details'][0]['origin'],
+                destination=flight_info['details'][0]['destination'],
+                price=flight_info['price'],
+                duration=flight_info['duration'],
+                departure_date=datetime.strptime(flight_info['departure_date'], '%Y-%m-%d').date(),
+                departure_time=datetime.strptime(flight_info['departure_time'], '%H:%M').time(),
+                arrival_date=datetime.strptime(flight_info['arrival_date'], '%Y-%m-%d').date(),
+                arrival_time=datetime.strptime(flight_info['arrival_time'], '%H:%M').time(),
+                scales=flight_info['scales']
+            )
+            db.session.add(flight)
+
+        db.session.commit()
+
+        query = Flight.query
+
+        if origin:
+            query = query.filter(Flight.origin == dict_of_acronyms[origin])
+    
+        if destination:
+            query = query.filter(Flight.destination == dict_of_acronyms[destination])
+
+        if departure_date:
+            query = query.filter(Flight.departure_date == departure_date)
+
+        flights = query.order_by(Flight.departure_date).all()
     
     keys = ["id", "price", "duration", "departure_date", "departure_time", "arrival_date", "arrival_time", "scales"]
     documents = [dict(zip(keys, [getattr(flight, key) for key in keys])) for flight in flights]
