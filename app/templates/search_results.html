@@ -1,80 +1,172 @@
 {% extends 'app.html' %} {% block title %} 🛩️ SkyTech | Scraper {% endblock %}
 {% block content %}
-<div class="container mx-auto px-4 py-5 mt-5 bg-white rounded-lg shadow">
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
-    Flight Results
-  </h2>
-  <p class="text-lg text-center text-gray-600 mb-6">
-    Explore your flight options below.
-  </p>
-
-  <div class="space-y-4">
-    {% for flight in documents %}
-    <div
-      class="bg-white rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 p-4"
-    >
-      <div class="grid grid-cols-3 gap-4">
-        <div>
-          <h5 class="font-semibold">
-            {{ flight['departure_date'] }} - {{ flight['arrival_date'] }}
-          </h5>
-          <p class="text-sm text-gray-500">
-            {{ flight['departure_time'] }} - {{ flight['arrival_time'] }}
-          </p>
-        </div>
-        <div>
-          <p>Origin - Destination</p>
-          <p>Duration: {{ flight['duration'] }}</p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
+  <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+    <!-- Flight Card -->
+    {% if documents %}
+    <div class="bg-gray-100 rounded-lg p-6 md:p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <img
+            src="https://depaseoperu.com/wp-content/uploads/2023/06/Lima.jpg"
+            width="80"
+            height="80"
+            alt="Airline Logo"
+            class="rounded-full"
+          />
+          <div>
+            <div class="font-semibold">Airline</div>
+            <div class="text-gray-500 text-sm">
+              Flight #{{ documents[0]['id'] }}
+            </div>
+          </div>
         </div>
         <div class="text-right">
-          <h3 class="text-xl font-bold">USD {{ flight['price'] }}</h3>
-          <div class="flex justify-end space-x-2">
-            <a href="#" class="btn btn-primary">Book Now</a>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-modal-toggle="flightModal-{{ loop.index }}"
-            >
-              ChatGPT Description
-            </button>
+          <div class="font-semibold">
+            {{ documents[0]['origin'] }} <span class="font-normal">to</span> {{
+            documents[0]['destination'] }}
+          </div>
+          <div class="text-gray-500 text-sm">
+            {{ documents[0]['departure_time'] }} - {{
+            documents[0]['arrival_time'] }}
           </div>
         </div>
       </div>
-    </div>
-    <!-- Modal -->
-    <div
-      id="flightModal-{{ loop.index }}"
-      tabindex="-1"
-      aria-hidden="true"
-      class="modal modal-fade-in"
-    >
-      <div class="modal-box">
-        <h3 class="font-bold text-lg">About your destination</h3>
-        <p class="py-4">
-          Embárquese en una aventura inolvidable desde {{
-          flight['departure_date'] }} hacia la vibrante y dinámica {{
-          flight['arrival_date'] }}. Disfrute de un viaje confortable y sin
-          escalas que lo llevará a su destino en solo {{ flight['duration'] }}.
-          Aproveche nuestras tarifas económicas desde USD {{ flight['price'] }}
-          y experimente el servicio de clase mundial de nuestra aerolínea.
-          ¡Reserve ahora y asegure su asiento para descubrir los tesoros que el
-          destino tiene para ofrecer!
-        </p>
-        <div class="modal-action">
-          <a
-            href="#"
-            class="btn btn-secondary"
-            data-modal-toggle="flightModal-{{ loop.index }}"
-            >Close</a
+      <div class="grid gap-4">
+        <div class="flex items-center justify-between">
+          <div class="text-gray-500">Departure</div>
+          <div>{{ documents[0]['origin'] }}</div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="text-gray-500">Arrival</div>
+          <div>{{ documents[0]['destination'] }}</div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="text-gray-500">Duration</div>
+          <div>{{ documents[0]['duration'] }}</div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="text-gray-500">Class</div>
+          <div>Economy</div>
+        </div>
+        <div class="text-right">
+          <h3 class="text-xl font-bold text-green-600">
+            USD {{ documents[0]['price'] }}
+          </h3>
+          <a href="#" class="btn btn-primary mt-2">Book Now</a>
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            data-modal-toggle="flightModal-1"
           >
+            Description
+          </button>
         </div>
       </div>
     </div>
-    {% endfor %}
+
+    <!-- Destination Description -->
+    <div class="grid gap-6">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">
+          Discover {{ documents[0]['destination'] }}
+        </h2>
+        <p class="text-gray-500">
+          {{ documents[0]['destination'] }} is a vibrant and diverse metropolis,
+          offering a wealth of cultural, culinary, and entertainment
+          experiences. From historical landmarks to modern attractions, there is
+          something for everyone to explore.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Top Attractions</h3>
+        <ul class="grid gap-4">
+          <li class="flex items-center gap-4">
+            <img
+              src="https://media.traveler.es/photos/61376ddacb06ad0f20e12713/master/pass/143246.jpg"
+              width="80"
+              height="80"
+              alt="Central Park"
+              class="rounded-lg"
+            />
+            <div>
+              <div class="font-semibold">Arequipa</div>
+              <p class="text-gray-500 text-sm">
+                Iconic urban oasis with lush greenery, lakes, and recreational
+                activities.
+              </p>
+            </div>
+          </li>
+          <li class="flex items-center gap-4">
+            <img
+              src="https://media.tacdn.com/media/attractions-splice-spp-674x446/06/f2/64/89.jpg"
+              width="80"
+              height="80"
+              alt="Empire State Building"
+              class="rounded-lg"
+            />
+            <div>
+              <div class="font-semibold">Cusco</div>
+              <p class="text-gray-500 text-sm">
+                Legendary city with observation decks offering panoramic city
+                views.
+              </p>
+            </div>
+          </li>
+          <li class="flex items-center gap-4">
+            <img
+              src="https://depaseoperu.com/wp-content/uploads/2023/06/Lima.jpg"
+              width="80"
+              height="80"
+              alt="Times Square"
+              class="rounded-lg"
+            />
+            <div>
+              <div class="font-semibold">Lima</div>
+              <p class="text-gray-500 text-sm">
+                Iconic intersection with bright lights, billboards, and endless
+                entertainment.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center text-gray-500">
+      No flights found for the given criteria.
+    </div>
+    {% endif %}
   </div>
 
   <div class="text-center mt-10">
     <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Search</a>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  id="flightModal-1"
+  tabindex="-1"
+  aria-hidden="true"
+  class="modal modal-fade-in"
+>
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">About your destination</h3>
+    <p class="py-4">
+      Embárquese en una aventura inolvidable desde {{ documents[0]['origin'] }}
+      hacia la vibrante y dinámica {{ documents[0]['destination'] }}. Disfrute
+      de un viaje confortable y sin escalas que lo llevará a su destino en solo
+      {{ documents[0]['duration'] }}. Aproveche nuestras tarifas económicas
+      desde USD {{ documents[0]['price'] }} y experimente el servicio de clase
+      mundial de nuestra aerolínea. ¡Reserve ahora y asegure su asiento para
+      descubrir los tesoros que el destino tiene para ofrecer!
+    </p>
+    <div class="modal-action">
+      <a href="#" class="btn btn-secondary" data-modal-toggle="flightModal-1"
+        >Close</a
+      >
+    </div>
   </div>
 </div>
 {% endblock %}
