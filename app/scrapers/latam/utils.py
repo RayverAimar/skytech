@@ -61,7 +61,6 @@ class Flight:
     def get_dict(self):
         flight_dict = {}
         fees_dict = {}
-        print(self.fees)
         if self.fees:
             for fee in self.fees:
                 fees_dict[fee.name] = fee.price
@@ -89,6 +88,13 @@ class Flight:
         flight_dict['details'] = details_list if self.details else None
         return flight_dict
     
+    def __str__(self):
+        return (f"Flight Information:\n"
+                f"Fees: {self.currency}\n"
+                f"Duration: {self.duration}\n"
+                f"Departure: {self.departure_datetime}\n"
+                f"Arrival: {self.arrival_datetime}\n"
+                f"Scale: {'Yes' if self.scale else 'No'}")
 
 class FlightDetails:
     def __init__(self, origin, departure_time, departure_airport, duration, destination, arrival_time, arrival_airport, flight_code, airplane_code):

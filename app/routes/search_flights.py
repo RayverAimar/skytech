@@ -12,7 +12,7 @@ from app.scrapers import LatamScraper
 
 from openai import OpenAI
 
-client = OpenAI(api_key='xd')
+client = OpenAI(api_key='.')
 
 search_flights = Blueprint('search_flights', __name__)
 

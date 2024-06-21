@@ -96,6 +96,8 @@ class LatamScraper:
         driver = webdriver.Chrome(options=options)
         driver.get(self.__get_flight_query_latam()) # See if dates are correct -> Should be later than today 
         try:
+            import time
+            time.sleep(2)
             WebDriverWait(driver, timeout=TIMEOUT_PER_PAGE).until(EC.presence_of_element_located((By.XPATH, f'//li[contains(@class, "{CLASS_BODY_FLIGHTS}")]')))
             flights = self.__get_elements(driver, f'//li[contains(@class, "{CLASS_BODY_FLIGHTS}")]')
             print(f'There were found {len(flights)} flights for {self.departure_date}')
@@ -104,13 +106,12 @@ class LatamScraper:
                 try: 
                     print(f"Processing flight ({index+1}/{len(flights)})")
                     # Get the currency
-                    currency = self.__get_element(flight, f'.//span[contains(@class, "{CLASS_CURRENCY}")]', get_text=True)
-                    currency = currency.upper() if currency else None
-                    
+                    currency_str = self.__get_element(flight, f'.//span[contains(@class, "{CLASS_CURRENCY}")]', get_text=True)
+                    currency = currency_str.upper()[:3] if currency_str else None
                     # Currency and price have the same tags and classes, they only differ in one word
-                    price = self.__get_element(flight, f'.//span[contains(@class, "{CLASS_BASIC_PRICE}")][2]', get_text=True)
+                    #price = self.__get_element(flight, f'.//span[contains(@class, "{CLASS_BASIC_PRICE}")][2]', get_text=True)
+                    price = currency_str[3:]
                     price = float(price) if price else None
-                    
                     box_info = self.__get_element(flight, f'.//div[contains(@class, "{CLASS_BOX_INFO}")]')
                     
                     # Get the duration of total flight 
@@ -124,7 +125,8 @@ class LatamScraper:
                         )
 
                     # Get the time of departure
-                    departure_time_str = self.__get_element(box_info, './/div[1]/span', get_text=True)
+                    departure_time_str = self.__get_element(flight, '/html/body/div[1]/div[1]/main/div/div/div/div/ol/li[1]/div/div[1]/div[1]/div[2]/div[1]/div[1]/span[1]', get_text=True)
+                    
                     if departure_time_str:    
                         departure_datetime_hour, departure_datetime_minutes = get_hours_and_minutes_from_time(departure_time_str)
                         departure_datetime = datetime(self.departure_date.year,
@@ -136,7 +138,6 @@ class LatamScraper:
 
                     # Get the time of arrival
                     arrival_datetime = departure_datetime + duration if duration_str and departure_time_str else None
-
                     # Get the prices per each fee
                     fees_button = self.__get_element(flight, f'.//div[contains(@class, "{CLASS_FEES_BUTTON}")]')
                     fees_button.click()
@@ -149,10 +150,10 @@ class LatamScraper:
                     
                     # Get the number of scales 
                     scale = self.__get_element(flight, f'.//a[contains(@class, "{CLASS_SCALE}")]/span', get_text=True)
-                    if scale:
+                    
+                    if scale != "Directo" or scale != "Directo*":
                         # Scale is either just one number (digit) or a complete ('Directo') word
                         scale = int(scale[0]) if scale[0].isnumeric() else scale
-
                     current_flight = Flight(fees=fees,
                                             currency=currency,
                                             duration=duration_str,
@@ -161,7 +162,7 @@ class LatamScraper:
                                             scale=scale,
                     )
                     scale_button = self.__get_element(flight, f'.//a[contains(@class, "{CLASS_SCALE_BUTTON}")]')
-                    if scale_button:
+                    if scale_button and isinstance(scale, int):
                         scale_button.click()
                         
                         WebDriverWait(driver, timeout=TIMEOUT_PER_BUTTON).until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class, "{CLASS_SUBSEGMENT_TOP_SCALES}")]/div[contains(@class, "{CLASS_DETAILS_FLIGHT_SEGMENT}")]/span[2]')))
@@ -176,11 +177,13 @@ class LatamScraper:
                                     current_flight.add_details(self.__get_details_from_flight_segment(flight_segments[i+1]))
                         
                     self.flights.append(current_flight)
-
+                    print(current_flight)
+                    print(current_flight.get_dict())
                     close_button = self.__get_element(flight, f'//button[contains(@class, "{CLASS_CLOSE_SCALE_BUTTON}")]')
                     if close_button:
                         close_button.click()
                         WebDriverWait(driver, timeout=TIMEOUT_PER_BUTTON).until(EC.presence_of_element_located((By.XPATH, f'//li[contains(@class, "{CLASS_BODY_FLIGHTS}")]')))
+                    
                 except StaleElementReferenceException:
                     print('Error finding element, skipping flight...')
                     continue
