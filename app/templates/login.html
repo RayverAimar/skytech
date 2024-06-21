@@ -8,7 +8,10 @@
       rel="stylesheet"
       type="text/css"
     />
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link
+      href="{{ url_for('static', filename='css/main.css') }}"
+      rel="stylesheet"
+    />
   </head>
   <body
     class="flex items-center justify-center h-screen bg-gradient-to-r from-primary to-purple-600"
