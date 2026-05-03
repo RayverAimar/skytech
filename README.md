@@ -4,6 +4,10 @@
 
 University project — runs locally only.
 
+<p align="center">
+  <img src="docs/home.png" alt="SkyTech Browser — Your Gateway to the Skies" width="720"/>
+</p>
+
 ## ⚠️ Status: archived, not working
 
 This project is **no longer functional** and is preserved for historical / educational purposes only:
